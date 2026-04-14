@@ -1,8 +1,13 @@
 # React Native + Expo 项目开发规范
 
+## 项目上下文
+
+- **Figma 设计稿**: https://www.figma.com/design/4rAkwQRcYRJaybgbniKete/Untitled?node-id=0-1&p=f&t=LQsmMO1GkBJqvQKJ-0
+- **当前开发重点**: 实现 Soft Pop 风格的体重记录页面（目标：73.5kg 记录 UI）
+
 ## 技术栈
 
-- React Native + Expo + TypeScript（禁止使用 `any`）
+- React Native + Expo + TypeScript + tailwindcss（禁止使用 `any`）
 - 状态管理：Zustand；路由：Expo Router；请求：axios（统一走 `src/api/`）
 - 路径别名：`@/` 指向 `src/`，禁止使用超过两层的相对路径 `../../`
 
@@ -18,10 +23,11 @@ src/
 │   ├── ui/         # 原子组件，无业务逻辑，只接收 props
 │   ├── common/     # 跨页面业务组件，可引用 hooks/store，禁止直接调用 api
 │   └── [模块名]/   # 业务专属组件，禁止被其他模块引用
-├── screens/        # 页面层，每个页面一个文件夹
-│   └── [模块名]/
-│       ├── [模块名]Screen.tsx
-│       └── components/   # 页面私有组件，禁止跨模块引用
+├── app/        # 页面层，每个页面一个文件夹
+│   ├── (auth)/             # 登录模块
+│   ├── (onboarding)/       # 初始化模块
+│   └── (main)/             # 正式业务模块
+│        └── index.tsx      # 主页面模块
 ├── navigation/     # 路由配置
 ├── utils/          # 纯函数，无副作用，无 store/api 引用
 ├── constants/      # 颜色、间距、字体 token（禁止业务代码硬编码数值）
