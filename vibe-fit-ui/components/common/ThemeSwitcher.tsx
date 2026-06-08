@@ -12,7 +12,7 @@ export interface ThemeSwitcherProps {
 /** 主题名 → 中文展示标签 */
 const THEME_LABELS: Record<ThemeName, string> = {
   softPop: 'Soft Pop',
-  midnight: 'Midnight',
+  pink: 'Pink',
   mint: 'Mint',
 };
 

@@ -15,6 +15,9 @@ export interface UseThemeReturn {
  * 在任意组件内调用即可获得响应式主题颜色。
  */
 export function useTheme(): UseThemeReturn {
-  const { themeName, setTheme } = useThemeStore();
-  return { theme: themes[themeName], themeName, setTheme };
+  const themeName = useThemeStore((state) => state.themeName);
+  const setTheme = useThemeStore((state) => state.setTheme);
+  const safeThemeName = themeName in themes ? themeName : 'softPop';
+
+  return { theme: themes[safeThemeName], themeName: safeThemeName, setTheme };
 }

@@ -1,27 +1,28 @@
-import '../global.css';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import { fontAssets } from '@/constants/fonts';
+import '../global.css'
+import { useFonts } from 'expo-font'
+import { Stack } from 'expo-router'
+import * as SplashScreen from 'expo-splash-screen'
+import { useEffect } from 'react'
+import { fontAssets } from '@/constants/fonts'
 
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
-  const [fontsLoaded, fontError] = useFonts(fontAssets);
+  const [fontsLoaded, fontError] = useFonts(fontAssets)
 
   useEffect(() => {
     if (fontsLoaded || fontError) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync()
     }
-  }, [fontsLoaded, fontError]);
+  }, [fontsLoaded, fontError])
 
-  console.log('[Layout] fontsLoaded:', fontsLoaded, 'fontError:', fontError);
   if (!fontsLoaded && !fontError) {
-    return null;
+    return null
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }} />
-  );
+    <Stack
+      screenOptions={{ headerShown: false, animation: 'slide_from_right' }}
+    />
+  )
 }

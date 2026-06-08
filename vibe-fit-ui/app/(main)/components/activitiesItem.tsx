@@ -1,6 +1,9 @@
 import { Text, TouchableOpacity, View } from 'react-native'
 import Svg, { Circle, Path, Rect } from 'react-native-svg'
 
+import { TranslationKey, useLanguage } from '@/hooks/useLanguage'
+import { useTheme } from '@/hooks/useTheme'
+
 // ─── 类型 ─────────────────────────────────────────────────────────────────────
 
 export interface Activity {
@@ -19,7 +22,7 @@ export interface ActivitiesItemProps {
 
 // ─── 卡片图标 ─────────────────────────────────────────────────────────────────
 
-function IconActivity() {
+function IconActivity({ color }: { color: string }) {
   return (
     <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
       <Rect
@@ -28,18 +31,18 @@ function IconActivity() {
         width={18}
         height={18}
         rx={3}
-        stroke="#FFFFFF"
+        stroke={color}
         strokeWidth={1.8}
       />
       <Path
         d="M3 9h18"
-        stroke="#FFFFFF"
+        stroke={color}
         strokeWidth={1.8}
         strokeLinecap="round"
       />
       <Path
         d="M8 13h4M8 16h8"
-        stroke="#FFFFFF"
+        stroke={color}
         strokeWidth={1.8}
         strokeLinecap="round"
       />
@@ -47,18 +50,26 @@ function IconActivity() {
   )
 }
 
-function IconChevron() {
+function IconChevron({ color }: { color: string }) {
   return (
     <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
       <Path
         d="M9 6l6 6-6 6"
-        stroke="#9D8FFF"
+        stroke={color}
         strokeWidth={1.8}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
     </Svg>
   )
+}
+
+const ACTIVITY_TITLE_KEYS: Record<string, TranslationKey> = {
+  'Morning Run': 'morningRun',
+  'Full Body Strength': 'fullBodyStrength',
+  'Yoga & Stretch': 'yogaStretch',
+  'Evening Walk': 'eveningWalk',
+  'Core Training': 'coreTraining',
 }
 
 // ─── 组件 ─────────────────────────────────────────────────────────────────────
@@ -69,15 +80,18 @@ function IconChevron() {
  * 奇偶行使用不同紫色背景交替展示。
  */
 export function ActivitiesItem({ activities, onSeeAll }: ActivitiesItemProps) {
+  const { t } = useLanguage()
+  const { theme } = useTheme()
+
   return (
     <>
       {/* 活动标题 */}
       <View className="flex-row items-center justify-between px-6 mb-3">
         <Text
-          className="text-sp-text font-poppins-bold"
-          style={{ fontSize: 16 }}
+          className="font-poppins-bold"
+          style={{ fontSize: 16, color: theme.textPrimary }}
         >
-          Today's Activities
+          {t('todayActivities')}
         </Text>
         {/* <TouchableOpacity onPress={onSeeAll}>
           <Text
@@ -96,8 +110,9 @@ export function ActivitiesItem({ activities, onSeeAll }: ActivitiesItemProps) {
             key={item.id}
             className="flex-row items-center rounded-2xl px-4 py-4"
             style={{
-              backgroundColor: index % 2 === 0 ? '#8B78FF' : '#A898FF',
-              shadowColor: '#5028FC',
+              backgroundColor:
+                index % 2 === 0 ? theme.accent : theme.accentSoft,
+              shadowColor: theme.shadow,
               shadowOpacity: 0.18,
               shadowRadius: 10,
               shadowOffset: { width: 0, height: 4 },
@@ -108,15 +123,17 @@ export function ActivitiesItem({ activities, onSeeAll }: ActivitiesItemProps) {
               className="w-11 h-11 rounded-xl items-center justify-center mr-4"
               style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
             >
-              <IconActivity />
+              <IconActivity color={theme.onAccent} />
             </View>
 
             <View className="flex-1">
               <Text
-                className="text-white font-poppins-medium"
-                style={{ fontSize: 14 }}
+                className="font-poppins-medium"
+                style={{ fontSize: 14, color: theme.onAccent }}
               >
-                {item.title}
+                {ACTIVITY_TITLE_KEYS[item.title]
+                  ? t(ACTIVITY_TITLE_KEYS[item.title])
+                  : item.title}
               </Text>
               <View className="flex-row items-center mt-1">
                 <Svg width={12} height={12} viewBox="0 0 24 24" fill="none">
@@ -124,19 +141,19 @@ export function ActivitiesItem({ activities, onSeeAll }: ActivitiesItemProps) {
                     cx={12}
                     cy={12}
                     r={9}
-                    stroke="rgba(255,255,255,0.8)"
+                    stroke={theme.onAccent}
                     strokeWidth={2}
                   />
                   <Path
                     d="M12 7v5l3 3"
-                    stroke="rgba(255,255,255,0.8)"
+                    stroke={theme.onAccent}
                     strokeWidth={2}
                     strokeLinecap="round"
                   />
                 </Svg>
                 <Text
-                  className="text-white font-poppins ml-1"
-                  style={{ fontSize: 12, opacity: 0.85 }}
+                  className="font-poppins ml-1"
+                  style={{ fontSize: 12, opacity: 0.85, color: theme.onAccent }}
                 >
                   {item.time}
                 </Text>
@@ -148,7 +165,7 @@ export function ActivitiesItem({ activities, onSeeAll }: ActivitiesItemProps) {
                 className="w-7 h-7 rounded-full items-center justify-center"
                 style={{ backgroundColor: 'rgba(255,255,255,0.18)' }}
               >
-                <IconChevron />
+                <IconChevron color={theme.onAccent} />
               </View>
             )}
           </View>

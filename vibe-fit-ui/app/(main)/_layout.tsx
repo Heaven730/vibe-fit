@@ -1,10 +1,11 @@
 import { LinearGradient } from 'expo-linear-gradient'
-import { Tabs } from 'expo-router'
+import { Tabs, usePathname } from 'expo-router'
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import { useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
+import { useLanguage } from '@/hooks/useLanguage'
 import { useTheme } from '@/hooks/useTheme'
 import { useOnboardingStore } from '@/store/onboardingStore'
 
@@ -15,12 +16,14 @@ const ROUTE_TO_TAB: Record<string, TabKey> = {
   index: 'workout',
   calendar: 'calendar',
   profile: 'profile',
+  setting: 'setting',
 }
 
 const TAB_TO_ROUTE: Record<TabKey, string> = {
   workout: 'index',
   calendar: 'calendar',
   profile: 'profile',
+  setting: 'setting',
 }
 
 function TabBar({ state, navigation }: BottomTabBarProps) {
@@ -36,18 +39,22 @@ function TabBar({ state, navigation }: BottomTabBarProps) {
 }
 
 export default function MainLayout() {
-  const { nickname, weight, weightUnit } = useOnboardingStore()
+  const { nickname, profilepicture, weight, weightUnit } = useOnboardingStore()
+  const { t } = useLanguage()
   const { theme } = useTheme()
+  const pathname = usePathname()
 
   const today = useMemo(() => new Date(), [])
+  const shouldShowHeader = pathname !== '/setting'
+  const isProfileFocused = pathname === '/profile'
 
   const greetingHour = today.getHours()
   const greeting =
     greetingHour < 12
-      ? 'Good Morning'
+      ? t('goodMorning')
       : greetingHour < 18
-      ? 'Good Afternoon'
-      : 'Good Evening'
+      ? t('goodAfternoon')
+      : t('goodEvening')
 
   const weightInt = Math.floor(weight)
   const weightDec = (weight % 1).toFixed(1).slice(1)
@@ -65,13 +72,17 @@ export default function MainLayout() {
       />
 
       <SafeAreaView className="flex-1 bg-transparent">
-        <Header
-          greeting={greeting}
-          displayName={nickname || '---'}
-          weightInt={weightInt}
-          weightDec={weightDec}
-          weightUnit={weightUnit}
-        />
+        {shouldShowHeader && (
+          <Header
+            greeting={greeting}
+            displayName={nickname || '---'}
+            weightInt={weightInt}
+            weightDec={weightDec}
+            weightUnit={weightUnit}
+            showAvatar={isProfileFocused}
+            avatarUri={profilepicture}
+          />
+        )}
 
         <Tabs
           screenOptions={{

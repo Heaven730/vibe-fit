@@ -1,5 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+
+import { useLanguage } from '@/hooks/useLanguage'
+import { useTheme } from '@/hooks/useTheme'
 
 export interface DayItem {
   date: number
@@ -28,20 +31,6 @@ export interface CalendarStripProps {
 const ITEM_WIDTH = 52
 const H_PADDING = 8
 
-const MONTH_NAMES = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-]
 const MONTH_SHORT = [
   'Jan',
   'Feb',
@@ -75,6 +64,8 @@ export function CalendarStrip({
   displayMonth,
   onMonthChange,
 }: CalendarStripProps) {
+  const { language, t } = useLanguage()
+  const { theme } = useTheme()
   const scrollRef = useRef<ScrollView>(null)
   const viewWidthRef = useRef(0)
 
@@ -89,7 +80,10 @@ export function CalendarStrip({
   const nowDay = now.getDate()
 
   // 可选月份：今年 1 月(0) → 当前月
-  const availableMonths = Array.from({ length: nowMonth + 1 }, (_, i) => i)
+  const availableMonths = useMemo(
+    () => Array.from({ length: nowMonth + 1 }, (_, i) => i),
+    [nowMonth]
+  )
 
   // 弹框内日期网格数据
   const pendingDaysInMonth = new Date(nowYear, pendingMonth + 1, 0).getDate()
@@ -131,6 +125,30 @@ export function CalendarStrip({
 
   const showMonthLabel =
     monthSelectable && displayYear !== undefined && displayMonth !== undefined
+  const monthNames = useMemo(
+    () => [
+      t('monthJanuary'),
+      t('monthFebruary'),
+      t('monthMarch'),
+      t('monthApril'),
+      t('monthMay'),
+      t('monthJune'),
+      t('monthJuly'),
+      t('monthAugust'),
+      t('monthSeptember'),
+      t('monthOctober'),
+      t('monthNovember'),
+      t('monthDecember'),
+    ],
+    [t]
+  )
+  const monthShort = useMemo(
+    () =>
+      language === 'zh'
+        ? Array.from({ length: 12 }, (_, i) => `${i + 1}月`)
+        : MONTH_SHORT,
+    [language]
+  )
 
   return (
     <>
@@ -138,7 +156,8 @@ export function CalendarStrip({
       <View
         className="mx-4 mt-2 mb-4 rounded-2xl bg-white px-3"
         style={{
-          shadowColor: '#5028FC',
+          backgroundColor: theme.surface,
+          shadowColor: theme.shadow,
           shadowOpacity: 0.08,
           shadowRadius: 12,
           shadowOffset: { width: 0, height: 4 },
@@ -157,10 +176,10 @@ export function CalendarStrip({
             className="flex-row items-center px-4 pt-3 pb-1"
           >
             <Text
-              className="text-sp-accent font-poppins-bold"
-              style={{ fontSize: 13 }}
+              className="font-poppins-bold"
+              style={{ fontSize: 13, color: theme.accent }}
             >
-              {MONTH_NAMES[displayMonth!]} {displayYear}
+              {monthNames[displayMonth!]} {displayYear}
             </Text>
           </TouchableOpacity>
         ) : (
@@ -192,31 +211,42 @@ export function CalendarStrip({
                   style={{
                     fontSize: 11,
                     opacity: isDisabled ? 0.3 : 1,
-                    color: isSelected && !isDisabled ? '#8B78FF' : '#9E9E9E',
+                    color:
+                      isSelected && !isDisabled
+                        ? theme.accent
+                        : theme.textMuted,
                   }}
                 >
                   {item.day}
                 </Text>
                 <View
-                  className={`w-9 h-9 rounded-full items-center justify-center ${
-                    isSelected && !isDisabled
-                      ? 'bg-sp-accent'
-                      : 'bg-transparent'
-                  }`}
+                  className="w-9 h-9 rounded-full items-center justify-center"
+                  style={{
+                    backgroundColor:
+                      isSelected && !isDisabled
+                        ? theme.accent
+                        : 'transparent',
+                  }}
                 >
                   <Text
                     className="font-poppins-bold"
                     style={{
                       fontSize: 15,
                       opacity: isDisabled ? 0.3 : 1,
-                      color: isSelected && !isDisabled ? '#FFFFFF' : '#1A1A2E',
+                      color:
+                        isSelected && !isDisabled
+                          ? theme.onAccent
+                          : theme.textPrimary,
                     }}
                   >
                     {item.date}
                   </Text>
                 </View>
                 {isSelected && !isDisabled && (
-                  <View className="w-1 h-1 rounded-full bg-sp-accent mt-1" />
+                  <View
+                    className="w-1 h-1 rounded-full mt-1"
+                    style={{ backgroundColor: theme.accent }}
+                  />
                 )}
               </TouchableOpacity>
             )
@@ -245,10 +275,11 @@ export function CalendarStrip({
           >
             <TouchableOpacity activeOpacity={1}>
               <View
-                className="bg-white rounded-3xl px-5 py-5"
+                className="rounded-3xl px-5 py-5"
                 style={{
                   width: 320,
-                  shadowColor: '#5028FC',
+                  backgroundColor: theme.surface,
+                  shadowColor: theme.shadow,
                   shadowOpacity: 0.15,
                   shadowRadius: 20,
                   shadowOffset: { width: 0, height: 8 },
@@ -259,8 +290,8 @@ export function CalendarStrip({
                 {pickerStep === 'month' && (
                   <>
                     <Text
-                      className="text-sp-text font-poppins-bold text-center mb-4"
-                      style={{ fontSize: 16 }}
+                      className="font-poppins-bold text-center mb-4"
+                      style={{ fontSize: 16, color: theme.textPrimary }}
                     >
                       {nowYear}
                     </Text>
@@ -273,7 +304,9 @@ export function CalendarStrip({
                             onPress={() => selectMonth(m)}
                             className="rounded-2xl px-4 py-2"
                             style={{
-                              backgroundColor: isActive ? '#5028FC' : '#F0ECFF',
+                              backgroundColor: isActive
+                                ? theme.accent
+                                : theme.accentSubtle,
                               minWidth: 72,
                               alignItems: 'center',
                             }}
@@ -282,10 +315,10 @@ export function CalendarStrip({
                               className="font-poppins-medium"
                               style={{
                                 fontSize: 13,
-                                color: isActive ? '#FFFFFF' : '#5028FC',
+                                color: isActive ? theme.onAccent : theme.accent,
                               }}
                             >
-                              {MONTH_SHORT[m]}
+                              {monthShort[m]}
                             </Text>
                           </TouchableOpacity>
                         )
@@ -305,17 +338,17 @@ export function CalendarStrip({
                         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                       >
                         <Text
-                          className="text-sp-accent font-poppins-bold"
-                          style={{ fontSize: 18 }}
+                          className="font-poppins-bold"
+                          style={{ fontSize: 18, color: theme.accent }}
                         >
                           ‹
                         </Text>
                       </TouchableOpacity>
                       <Text
-                        className="text-sp-text font-poppins-bold flex-1 text-center"
-                        style={{ fontSize: 15 }}
+                        className="font-poppins-bold flex-1 text-center"
+                        style={{ fontSize: 15, color: theme.textPrimary }}
                       >
-                        {MONTH_NAMES[pendingMonth]} {nowYear}
+                        {monthNames[pendingMonth]} {nowYear}
                       </Text>
                       {/* 占位保持标题居中 */}
                       <View style={{ width: 24 }} />
@@ -326,8 +359,12 @@ export function CalendarStrip({
                       {WEEK_LABELS.map((w) => (
                         <Text
                           key={w}
-                          className="font-poppins-medium text-sp-text-secondary text-center"
-                          style={{ width: `${100 / 7}%`, fontSize: 11 }}
+                          className="font-poppins-medium text-center"
+                          style={{
+                            width: `${100 / 7}%`,
+                            fontSize: 11,
+                            color: theme.textSecondary,
+                          }}
                         >
                           {w}
                         </Text>
@@ -365,7 +402,7 @@ export function CalendarStrip({
                                 backgroundColor:
                                   d === selectedDate &&
                                   pendingMonth === displayMonth
-                                    ? '#5028FC'
+                                    ? theme.accent
                                     : 'transparent',
                               }}
                             >
@@ -377,8 +414,8 @@ export function CalendarStrip({
                                   color:
                                     d === selectedDate &&
                                     pendingMonth === displayMonth
-                                      ? '#FFFFFF'
-                                      : '#1A1A2E',
+                                      ? theme.onAccent
+                                      : theme.textPrimary,
                                 }}
                               >
                                 {d}

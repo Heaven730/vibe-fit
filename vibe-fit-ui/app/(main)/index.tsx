@@ -3,6 +3,7 @@ import { ScrollView } from 'react-native'
 
 import { CalendarStrip, DayItem } from './components/CalendarStrip'
 import { ActivitiesItem } from './components/activitiesItem'
+import Profile from './profile'
 
 // ─── 常量数据 ─────────────────────────────────────────────────────────────────
 

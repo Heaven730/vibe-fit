@@ -1,7 +1,7 @@
 /**
  * 语义化主题系统
  *
- * 包含三套主题：softPop（Figma 设计稿提取）、midnight（深色）、mint（清新绿）
+ * 包含三套主题：softPop（Figma 设计稿提取）、pink（粉色）、mint（清新绿）
  * 用法：import { themes } from '@/constants/themes'
  *       const t = themes.softPop
  */
@@ -9,49 +9,55 @@
 export interface Theme {
   // ---------- 背景 ----------
   /** 页面底层背景色 */
-  background: string;
+  background: string
   /** 页面背景渐变：起始色（顶部） */
-  backgroundGradientStart: string;
+  backgroundGradientStart: string
   /** 页面背景渐变：结束色（底部，带透明度的品牌色） */
-  backgroundGradientEnd: string;
+  backgroundGradientEnd: string
   /** 卡片 / Sheet 表面色 */
-  surface: string;
+  surface: string
   /** 次级表面色（输入框、按钮等静默状态） */
-  surfaceMuted: string;
+  surfaceMuted: string
 
   // ---------- 文字 ----------
   /** 主文字（标题、正文） */
-  textPrimary: string;
+  textPrimary: string
   /** 次级文字（说明、辅助信息） */
-  textSecondary: string;
+  textSecondary: string
   /** 占位符文字 */
-  textPlaceholder: string;
+  textPlaceholder: string
   /** 静默文字（禁用按钮等） */
-  textMuted: string;
+  textMuted: string
 
   // ---------- 边框 ----------
   /** 常规边框（输入框、卡片边缘） */
-  border: string;
+  border: string
   /** 静默边框（禁用状态、分割线） */
-  borderMuted: string;
+  borderMuted: string
 
   // ---------- 品牌 / 强调色 ----------
   /** 主品牌色 */
-  accent: string;
+  accent: string
+  /** 主品牌色上的文字 / 图标色 */
+  onAccent: string
+  /** 主品牌色的柔和变体，用于交替卡片、次级图形 */
+  accentSoft: string
+  /** 主品牌色的更弱变体，用于图表背景或静默块 */
+  accentMuted: string
   /** 品牌色（低透明度，用于渐变/背景叠加） */
-  accentSubtle: string;
+  accentSubtle: string
 
   // ---------- 阴影 ----------
   /** 卡片 / 浮层阴影色 */
-  shadow: string;
+  shadow: string
 
   // ---------- 状态色 ----------
   /** 成功 */
-  success: string;
+  success: string
   /** 警告 */
-  warning: string;
+  warning: string
   /** 错误 */
-  error: string;
+  error: string
 }
 
 // ─────────────────────────────────────────────
@@ -74,6 +80,9 @@ const softPop: Theme = {
   borderMuted: '#D0C9C7',
 
   accent: '#5028FC',
+  onAccent: '#FFFFFF',
+  accentSoft: '#9D8FFF',
+  accentMuted: '#C4BAFF',
   accentSubtle: 'rgba(80, 40, 252, 0.12)',
 
   shadow: 'rgba(0, 0, 0, 0.10)',
@@ -81,36 +90,39 @@ const softPop: Theme = {
   success: '#4CAF82',
   warning: '#F5A623',
   error: '#E05252',
-};
+}
 
 // ─────────────────────────────────────────────
-// 2. midnight — 深色主题
-//    深灰底 + 亮紫品牌色，沉稳专注
+// 2. pink — 粉色主题
+//    淡玫瑰底 + 深莓粉品牌色，柔和沉稳
 // ─────────────────────────────────────────────
-const midnight: Theme = {
-  background: '#0E0E14',
-  backgroundGradientStart: 'rgba(14, 14, 20, 0.20)',
-  backgroundGradientEnd: 'rgba(100, 60, 255, 0.25)',
-  surface: '#1C1C26',
-  surfaceMuted: '#252530',
+const pink: Theme = {
+  background: '#FBF3F6',
+  backgroundGradientStart: 'rgba(255, 255, 255, 0.25)',
+  backgroundGradientEnd: 'rgba(224, 69, 123, 0.22)',
+  surface: '#FFFFFF',
+  surfaceMuted: '#F8E9EF',
 
-  textPrimary: '#F5F4FF',
-  textSecondary: '#A09DB8',
-  textPlaceholder: '#5E5B72',
-  textMuted: '#7A778F',
+  textPrimary: '#2A121B',
+  textSecondary: '#6F4454',
+  textPlaceholder: '#A6788A',
+  textMuted: '#875D6E',
 
-  border: '#2E2B40',
-  borderMuted: '#232030',
+  border: '#D9A7BA',
+  borderMuted: '#C995A9',
 
-  accent: '#7C5CFC',
-  accentSubtle: 'rgba(124, 92, 252, 0.18)',
+  accent: '#E0457B',
+  onAccent: '#FFFFFF',
+  accentSoft: '#f494b6',
+  accentMuted: '#F8D4CE',
+  accentSubtle: 'rgba(224, 69, 123, 0.18)',
 
-  shadow: 'rgba(0, 0, 0, 0.40)',
+  shadow: 'rgba(118, 45, 74, 0.14)',
 
-  success: '#3DB87A',
+  success: '#4CAF82',
   warning: '#F5A623',
   error: '#E05252',
-};
+}
 
 // ─────────────────────────────────────────────
 // 3. mint — 清新绿主题
@@ -132,6 +144,9 @@ const mint: Theme = {
   borderMuted: '#B8D8C6',
 
   accent: '#20B278',
+  onAccent: '#FFFFFF',
+  accentSoft: '#76D4AA',
+  accentMuted: '#B7E8D0',
   accentSubtle: 'rgba(32, 178, 120, 0.12)',
 
   shadow: 'rgba(0, 0, 0, 0.08)',
@@ -139,15 +154,15 @@ const mint: Theme = {
   success: '#20B278',
   warning: '#F5A623',
   error: '#E05252',
-};
+}
 
 // ─────────────────────────────────────────────
 // 导出
 // ─────────────────────────────────────────────
 export const themes = {
   softPop,
-  midnight,
+  pink,
   mint,
-} as const;
+} as const
 
-export type ThemeName = keyof typeof themes;
+export type ThemeName = keyof typeof themes

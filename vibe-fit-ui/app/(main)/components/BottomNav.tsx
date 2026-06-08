@@ -1,7 +1,7 @@
 import { TouchableOpacity, View } from 'react-native'
-import Svg, { Path } from 'react-native-svg'
+import Svg, { G, Path } from 'react-native-svg'
 
-export type TabKey = 'calendar' | 'workout' | 'profile'
+export type TabKey = 'calendar' | 'workout' | 'profile' | 'setting'
 
 export interface BottomNavProps {
   /** 当前激活的 tab */
@@ -10,8 +10,7 @@ export interface BottomNavProps {
   onTabChange: (tab: TabKey) => void
 }
 
-function IconCalendar({ active }: { active: boolean }) {
-  const color = active ? '#FFFFFF' : '#888888'
+function IconCalendar({ color }: { color: string }) {
   return (
     <Svg width={26} height={26} viewBox="0 0 1024 1024" fill="none">
       <Path
@@ -26,8 +25,7 @@ function IconCalendar({ active }: { active: boolean }) {
   )
 }
 
-function IconWorkout({ active }: { active: boolean }) {
-  const color = active ? '#FFFFFF' : '#888888'
+function IconWorkout({ color }: { color: string }) {
   return (
     <Svg width={26} height={26} viewBox="0 0 1024 1024" fill="none">
       <Path
@@ -38,8 +36,7 @@ function IconWorkout({ active }: { active: boolean }) {
   )
 }
 
-function IconProfile({ active }: { active: boolean }) {
-  const color = active ? '#FFFFFF' : '#888888'
+function IconProfile({ color }: { color: string }) {
   return (
     <Svg width={26} height={26} viewBox="0 0 1024 1024" fill="none">
       <Path
@@ -50,15 +47,29 @@ function IconProfile({ active }: { active: boolean }) {
   )
 }
 
+function IconSetting({ color }: { color: string }) {
+  return (
+    <Svg width={26} height={26} viewBox="0 0 1024 1024" fill="none">
+      <G transform="translate(-128 -128) scale(1.25)">
+        <Path
+          d="M396.72 320.592a141.184 141.184 0 0 1-99.824 15.92 277.648 277.648 0 0 0-45.344 74.576 141.216 141.216 0 0 1 37.52 95.952 141.248 141.248 0 0 1-41.728 100.32 274.4 274.4 0 0 0 49.952 86.224 141.264 141.264 0 0 1 107.168 14.176 141.216 141.216 0 0 1 63.984 79.296 274.72 274.72 0 0 0 86.816-1.92 141.248 141.248 0 0 1 66.016-86.304 141.216 141.216 0 0 1 101.856-15.488 277.648 277.648 0 0 0 41.92-76.544 141.184 141.184 0 0 1-36.128-94.4c0-34.912 12.768-67.68 34.816-92.96a274.736 274.736 0 0 0-38.192-70.032 141.264 141.264 0 0 1-105.792-14.56 141.312 141.312 0 0 1-67.168-90.912 274.4 274.4 0 0 0-92.784 0.016 141.152 141.152 0 0 1-63.088 76.64z m22.56-116.656c57.312-16 119.024-16.224 178.016 1.216a93.44 93.44 0 0 0 142.288 86.736 322.64 322.64 0 0 1 79.104 142.656 93.328 93.328 0 0 0-41.76 77.84 93.36 93.36 0 0 0 42.88 78.592 322.832 322.832 0 0 1-34.208 85.232 323.392 323.392 0 0 1-47.968 63.568 93.392 93.392 0 0 0-92.352 0.64 93.408 93.408 0 0 0-46.688 83.616 322.704 322.704 0 0 1-171.424 3.84 93.376 93.376 0 0 0-46.704-78.544 93.408 93.408 0 0 0-95.184 1.008A322.432 322.432 0 0 1 192 589.28a93.408 93.408 0 0 0 49.072-82.24c0-34.128-18.304-64-45.632-80.288a323.392 323.392 0 0 1 31.088-73.328 322.832 322.832 0 0 1 56.704-72.256 93.36 93.36 0 0 0 89.488-2.144 93.328 93.328 0 0 0 46.56-75.088z m92.208 385.28a68.864 68.864 0 1 0 0-137.76 68.864 68.864 0 0 0 0 137.76z m0 48a116.864 116.864 0 1 1 0-233.76 116.864 116.864 0 0 1 0 233.76z"
+          fill={color}
+        />
+      </G>
+    </Svg>
+  )
+}
+
 const TABS: { key: TabKey; Icon: typeof IconCalendar }[] = [
   { key: 'calendar', Icon: IconCalendar },
   { key: 'workout', Icon: IconWorkout },
   { key: 'profile', Icon: IconProfile },
+  { key: 'setting', Icon: IconSetting },
 ]
 
 /**
  * 底部导航栏（胶囊形暗色风格）
- * 三个 tab：日历(calendar_11)、训练记录(document_edit)、我的(person)
+ * 四个 tab：日历(calendar_11)、训练记录(document_edit)、我的(person)、设置(setting)
  * 默认选中 workout(document_edit)。
  */
 export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
@@ -82,7 +93,9 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
             onPress={() => onTabChange(key)}
             className="items-center justify-center px-4"
           >
-            <Icon active={activeTab === key} />
+            <Icon
+              color={activeTab === key ? '#FFFFFF' : '#888888'}
+            />
           </TouchableOpacity>
         ))}
       </View>

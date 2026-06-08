@@ -1,5 +1,7 @@
 import { Text, View } from 'react-native'
 
+import { Avatar } from '@/components/common/avatar'
+import { useTheme } from '@/hooks/useTheme'
 import { WeightUnit } from '@/store/onboardingStore'
 
 export interface HeaderProps {
@@ -13,6 +15,10 @@ export interface HeaderProps {
   weightDec: string
   /** 体重单位 */
   weightUnit: WeightUnit
+  /** Profile tab 聚焦时展示头像 */
+  showAvatar?: boolean
+  /** 头像 URI */
+  avatarUri?: string
 }
 
 /**
@@ -25,48 +31,65 @@ export function Header({
   weightInt,
   weightDec,
   weightUnit,
+  showAvatar = false,
+  avatarUri = '',
 }: HeaderProps) {
+  const { theme } = useTheme()
+
   return (
     <View className="flex-row items-center justify-between px-6 pt-6 pb-2">
       {/* 问候语 */}
       <View className="flex-1 pr-4">
         <Text
-          className="text-sp-text font-inika-bold"
-          style={{ fontSize: 28, lineHeight: 36 }}
+          className="font-inika-bold"
+          style={{ fontSize: 28, lineHeight: 36, color: theme.textPrimary }}
         >
           {greeting}
         </Text>
         <Text
-          className="text-sp-accent font-inika-bold"
-          style={{ fontSize: 28, lineHeight: 36 }}
+          className="font-inika-bold"
+          style={{ fontSize: 28, lineHeight: 36, color: theme.accent }}
         >
           {displayName}
         </Text>
       </View>
 
-      {/* 体重大数值 */}
-      <View className="items-end">
-        <View className="flex-row items-end">
+      {showAvatar ? (
+        <Avatar editable uri={avatarUri} size={92} />
+      ) : (
+        <View className="items-end">
+          <View className="flex-row items-end">
+            <Text
+              className="font-league-bold"
+              style={{
+                fontSize: 72,
+                lineHeight: 80,
+                letterSpacing: -2,
+                color: theme.accent,
+              }}
+            >
+              {weightInt}
+            </Text>
+            <Text
+              className="font-league-medium"
+              style={{
+                fontSize: 32,
+                lineHeight: 48,
+                marginBottom: 8,
+                color: theme.accentSoft,
+              }}
+            >
+              {weightDec}
+            </Text>
+          </View>
           <Text
-            className="text-sp-accent font-league-bold"
-            style={{ fontSize: 72, lineHeight: 80, letterSpacing: -2 }}
+            className="font-poppins-medium"
+            style={{ fontSize: 13, marginTop: -8, color: theme.textSecondary }}
           >
-            {weightInt}
-          </Text>
-          <Text
-            className="text-sp-purple font-league-medium"
-            style={{ fontSize: 32, lineHeight: 48, marginBottom: 8 }}
-          >
-            {weightDec}
+            {weightUnit}
           </Text>
         </View>
-        <Text
-          className="text-sp-text-secondary font-poppins-medium"
-          style={{ fontSize: 13, marginTop: -8 }}
-        >
-          {weightUnit}
-        </Text>
-      </View>
+      )}
     </View>
   )
 }

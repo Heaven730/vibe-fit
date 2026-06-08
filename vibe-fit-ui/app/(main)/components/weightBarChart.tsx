@@ -1,6 +1,9 @@
 import { useMemo } from 'react'
 import { Text, View } from 'react-native'
 
+import { useLanguage } from '@/hooks/useLanguage'
+import { useTheme } from '@/hooks/useTheme'
+
 // ─── Mock 数据（key: "YYYY-MM-DD"） ────────────────────────────────────────────
 
 const MOCK_WEIGHT: Record<string, number> = {
@@ -22,28 +25,7 @@ const MOCK_WEIGHT: Record<string, number> = {
   '2026-04-19': null as unknown as number,
 }
 
-// ─── 颜色常量（SoftPop） ────────────────────────────────────────────────────────
-
-const ACCENT = '#5028FC' // 强调文字
-const LAST_WEEK = '#C4BAFF' // 上周柱 — 淡紫
-const THIS_WEEK = '#FFD166' // 本周柱 — 暖黄
-const BG_BAR = 'rgba(157, 143, 255, 0.12)' // 背景层浅紫
-
 const CHART_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-const MONTH_SHORT = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-]
 const CHART_HEIGHT = 140 // 柱区域总高度（不含标签）
 const BAR_MIN_H = 12 // 有数据时最小柱高
 
@@ -101,6 +83,8 @@ export function WeightBarChart({
   month,
   selectedDate,
 }: WeightBarChartProps) {
+  const { t } = useLanguage()
+  const { theme } = useTheme()
   const thisWeekDates = useMemo(
     () => getWeekDates(year, month, selectedDate),
     [year, month, selectedDate]
@@ -110,12 +94,22 @@ export function WeightBarChart({
     [thisWeekDates]
   )
 
-  const thisWeekData = thisWeekDates.map((d) => MOCK_WEIGHT[toKey(d)] ?? null)
-  const lastWeekData = lastWeekDates.map((d) => MOCK_WEIGHT[toKey(d)] ?? null)
+  const thisWeekData = useMemo(
+    () => thisWeekDates.map((d) => MOCK_WEIGHT[toKey(d)] ?? null),
+    [thisWeekDates]
+  )
+  const lastWeekData = useMemo(
+    () => lastWeekDates.map((d) => MOCK_WEIGHT[toKey(d)] ?? null),
+    [lastWeekDates]
+  )
 
   // 所有有效值合并，统一计算 range
-  const allValues = [...thisWeekData, ...lastWeekData].filter(
-    (v): v is number => v !== null
+  const allValues = useMemo(
+    () =>
+      [...thisWeekData, ...lastWeekData].filter(
+        (v): v is number => v !== null
+      ),
+    [lastWeekData, thisWeekData]
   )
   const minW = allValues.length ? Math.min(...allValues) : 70
   const maxW = allValues.length ? Math.max(...allValues) : 75
@@ -129,22 +123,46 @@ export function WeightBarChart({
   // 周标注
   const weekStart = thisWeekDates[0]
   const weekEnd = thisWeekDates[6]
-  const fmt = (d: Date) => `${d.getDate()} ${MONTH_SHORT[d.getMonth()]}`
+  const monthNames = useMemo(
+    () => [
+      t('monthJanuary'),
+      t('monthFebruary'),
+      t('monthMarch'),
+      t('monthApril'),
+      t('monthMay'),
+      t('monthJune'),
+      t('monthJuly'),
+      t('monthAugust'),
+      t('monthSeptember'),
+      t('monthOctober'),
+      t('monthNovember'),
+      t('monthDecember'),
+    ],
+    [t]
+  )
+  const fmt = (d: Date) => `${d.getDate()} ${monthNames[d.getMonth()]}`
 
   const todayKey = toKey(new Date())
   const selectedKey = toKey(new Date(year, month, selectedDate))
 
   // 本周平均
-  const thisValid = thisWeekData.filter((v): v is number => v !== null)
-  const lastValid = lastWeekData.filter((v): v is number => v !== null)
+  const thisValid = useMemo(
+    () => thisWeekData.filter((v): v is number => v !== null),
+    [thisWeekData]
+  )
+  const lastValid = useMemo(
+    () => lastWeekData.filter((v): v is number => v !== null),
+    [lastWeekData]
+  )
   const avg = (arr: number[]) =>
     arr.length ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1) : null
 
   return (
     <View
-      className="mx-4 mb-5 bg-white rounded-3xl px-5 py-5"
+      className="mx-4 mb-5 rounded-3xl px-5 py-5"
       style={{
-        shadowColor: '#5028FC',
+        backgroundColor: theme.surface,
+        shadowColor: theme.shadow,
         shadowOpacity: 0.08,
         shadowRadius: 12,
         shadowOffset: { width: 0, height: 4 },
@@ -154,14 +172,14 @@ export function WeightBarChart({
       {/* ── 标题行 */}
       <View className="flex-row items-center justify-between mb-1">
         <Text
-          className="text-sp-text font-poppins-bold"
-          style={{ fontSize: 15 }}
+          className="font-poppins-bold"
+          style={{ fontSize: 15, color: theme.textPrimary }}
         >
-          Weekly Weight
+          {t('weeklyWeight')}
         </Text>
         <Text
-          className="text-sp-text-secondary font-poppins"
-          style={{ fontSize: 11 }}
+          className="font-poppins"
+          style={{ fontSize: 11, color: theme.textSecondary }}
         >
           {fmt(weekStart)} – {fmt(weekEnd)}
         </Text>
@@ -173,13 +191,13 @@ export function WeightBarChart({
           <View className="flex-row items-center gap-1">
             <View
               className="w-2 h-2 rounded-full"
-              style={{ backgroundColor: THIS_WEEK }}
+              style={{ backgroundColor: theme.accent }}
             />
             <Text
               className="font-poppins-medium"
-              style={{ fontSize: 11, color: '#806000' }}
+              style={{ fontSize: 11, color: theme.accent }}
             >
-              This {avg(thisValid)} kg
+              {t('thisLabel')} {avg(thisValid)} kg
             </Text>
           </View>
         )}
@@ -187,13 +205,13 @@ export function WeightBarChart({
           <View className="flex-row items-center gap-1">
             <View
               className="w-2 h-2 rounded-full"
-              style={{ backgroundColor: LAST_WEEK }}
+              style={{ backgroundColor: theme.accentMuted }}
             />
             <Text
               className="font-poppins-medium"
-              style={{ fontSize: 11, color: '#5028FC' }}
+              style={{ fontSize: 11, color: theme.textSecondary }}
             >
-              Last {avg(lastValid)} kg
+              {t('lastLabel')} {avg(lastValid)} kg
             </Text>
           </View>
         )}
@@ -222,8 +240,8 @@ export function WeightBarChart({
                   minHeight: 12,
                   color: hasThis
                     ? isSelected || isToday
-                      ? ACCENT
-                      : '#806000'
+                      ? theme.accent
+                      : theme.textSecondary
                     : 'transparent',
                 }}
               >
@@ -249,7 +267,7 @@ export function WeightBarChart({
                     right: 0,
                     height: CHART_HEIGHT,
                     borderRadius: 10,
-                    backgroundColor: BG_BAR,
+                    backgroundColor: theme.accentSubtle,
                   }}
                 />
 
@@ -262,7 +280,7 @@ export function WeightBarChart({
                       left: 0,
                       right: 0,
                       height: lastH,
-                      backgroundColor: LAST_WEEK,
+                      backgroundColor: theme.accentMuted,
                       borderRadius: 10,
                     }}
                   />
@@ -277,7 +295,7 @@ export function WeightBarChart({
                       left: 0,
                       right: 0,
                       height: thisH,
-                      backgroundColor: THIS_WEEK,
+                      backgroundColor: theme.accent,
                       opacity: isSelected || isToday ? 1 : 0.75,
                       borderRadius: 10,
                     }}
@@ -290,7 +308,7 @@ export function WeightBarChart({
                 className="font-poppins-medium mt-2"
                 style={{
                   fontSize: 10,
-                  color: isSelected || isToday ? ACCENT : '#9E9E9E',
+                  color: isSelected || isToday ? theme.accent : theme.textMuted,
                   fontWeight: isSelected || isToday ? '700' : '400',
                 }}
               >
@@ -306,41 +324,41 @@ export function WeightBarChart({
         <View className="flex-row items-center gap-1">
           <View
             className="w-2.5 h-2.5 rounded-sm"
-            style={{ backgroundColor: THIS_WEEK }}
+            style={{ backgroundColor: theme.accent }}
           />
           <Text
-            className="text-sp-text-secondary font-poppins"
-            style={{ fontSize: 10 }}
+            className="font-poppins"
+            style={{ fontSize: 10, color: theme.textSecondary }}
           >
-            This week
+            {t('thisWeek')}
           </Text>
         </View>
         <View className="flex-row items-center gap-1">
           <View
             className="w-2.5 h-2.5 rounded-sm"
-            style={{ backgroundColor: LAST_WEEK }}
+            style={{ backgroundColor: theme.accentMuted }}
           />
           <Text
-            className="text-sp-text-secondary font-poppins"
-            style={{ fontSize: 10 }}
+            className="font-poppins"
+            style={{ fontSize: 10, color: theme.textSecondary }}
           >
-            Last week
+            {t('lastWeek')}
           </Text>
         </View>
         <View className="flex-row items-center gap-1">
           <View
             className="w-2.5 h-2.5 rounded-sm"
             style={{
-              backgroundColor: BG_BAR,
+              backgroundColor: theme.accentSubtle,
               borderWidth: 1,
-              borderColor: LAST_WEEK,
+              borderColor: theme.accentMuted,
             }}
           />
           <Text
-            className="text-sp-text-secondary font-poppins"
-            style={{ fontSize: 10 }}
+            className="font-poppins"
+            style={{ fontSize: 10, color: theme.textSecondary }}
           >
-            No data
+            {t('noData')}
           </Text>
         </View>
       </View>
