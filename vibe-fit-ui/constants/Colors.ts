@@ -7,23 +7,23 @@ export const sp = {
   'text-secondary': '#606060',
   'text-placeholder': '#9C8888',
   'text-muted': '#6E6C6E',
-  border: '#D9D0E3',
-  'border-muted': '#D0C9C7',
-  accent: '#5028FC',
-  purple: '#9D8FFF',
-  'purple-dark': '#5028FC',
-  'selected-line': '#2A1FD0',
+  border: '#DED5F8',
+  'border-muted': '#D7D0E8',
+  accent: '#8B6DF7',
+  purple: '#A890FF',
+  'purple-dark': '#8B6DF7',
+  'selected-line': '#7456EA',
 }
 
 /** 渐变背景色 */
 export const gradient = {
   start: '#FFFFFF',
-  end: '#5028FC',
+  end: '#8B6DF7',
 }
 
 /** Expo 模板遗留兼容字段（供 Themed.tsx / EditScreenInfo.tsx 使用） */
-const tintColorLight = '#5028FC'
-const tintColorDark = '#9D8FFF'
+const tintColorLight = '#8B6DF7'
+const tintColorDark = '#A890FF'
 
 export const light = {
   text: '#101010',

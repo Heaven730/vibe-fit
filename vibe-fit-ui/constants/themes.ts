@@ -61,13 +61,12 @@ export interface Theme {
 }
 
 // ─────────────────────────────────────────────
-// 1. softPop — 来自 Figma 设计稿（node 7:2）
-//    暖白底 + 柔紫品牌色，圆润轻盈
+// 1. softPop — 暖白底 + 柔和蓝紫品牌色，圆润轻盈
 // ─────────────────────────────────────────────
 const softPop: Theme = {
   background: '#FCF8F8',
   backgroundGradientStart: 'rgba(255, 255, 255, 0.20)',
-  backgroundGradientEnd: 'rgba(80, 40, 252, 0.20)',
+  backgroundGradientEnd: 'rgba(139, 109, 247, 0.20)',
   surface: '#FFFFFF',
   surfaceMuted: '#FFF9F7',
 
@@ -76,16 +75,16 @@ const softPop: Theme = {
   textPlaceholder: '#9C8888',
   textMuted: '#6E6C6E',
 
-  border: '#D9D0E3',
-  borderMuted: '#D0C9C7',
+  border: '#DED5F8',
+  borderMuted: '#D7D0E8',
 
-  accent: '#5028FC',
+  accent: '#8B6DF7',
   onAccent: '#FFFFFF',
-  accentSoft: '#9D8FFF',
-  accentMuted: '#C4BAFF',
-  accentSubtle: 'rgba(80, 40, 252, 0.12)',
+  accentSoft: '#A890FF',
+  accentMuted: '#C9B8FF',
+  accentSubtle: 'rgba(139, 109, 247, 0.16)',
 
-  shadow: 'rgba(0, 0, 0, 0.10)',
+  shadow: 'rgba(88, 66, 180, 0.16)',
 
   success: '#4CAF82',
   warning: '#F5A623',

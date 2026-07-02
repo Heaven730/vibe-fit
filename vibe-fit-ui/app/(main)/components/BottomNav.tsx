@@ -1,6 +1,8 @@
 import { TouchableOpacity, View } from 'react-native'
 import Svg, { G, Path } from 'react-native-svg'
 
+import { useTheme } from '@/hooks/useTheme'
+
 export type TabKey = 'calendar' | 'workout' | 'profile' | 'setting'
 
 export interface BottomNavProps {
@@ -73,6 +75,8 @@ const TABS: { key: TabKey; Icon: typeof IconCalendar }[] = [
  * 默认选中 workout(document_edit)。
  */
 export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
+  const { theme } = useTheme()
+
   return (
     <View className="absolute bottom-8 left-0 right-0 items-center px-10">
       <View
@@ -94,7 +98,7 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
             className="items-center justify-center px-4"
           >
             <Icon
-              color={activeTab === key ? '#FFFFFF' : '#888888'}
+              color={activeTab === key ? theme.accent : '#FFFFFF'}
             />
           </TouchableOpacity>
         ))}

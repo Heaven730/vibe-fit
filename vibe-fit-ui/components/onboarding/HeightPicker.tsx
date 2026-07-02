@@ -34,10 +34,10 @@ function getLabelStyle(h: number, selected: number) {
   if (dist === 0)
     return { fontSize: fontSize['7xl'], color: sp.accent, fontFamily: FontFamily.PoppinsBold }
   if (dist <= 5)
-    return { fontSize: fontSize['5xl'], color: '#B0A8CC', fontFamily: FontFamily.PoppinsMedium }
+    return { fontSize: fontSize['5xl'], color: '#B8A7FF', fontFamily: FontFamily.PoppinsMedium }
   if (dist <= 10)
-    return { fontSize: fontSize['4xl'], color: '#d7d0ec', fontFamily: FontFamily.PoppinsRegular }
-  return { fontSize: fontSize['3xl'], color: '#dcd7f0', fontFamily: FontFamily.PoppinsRegular }
+    return { fontSize: fontSize['4xl'], color: '#D4C9FF', fontFamily: FontFamily.PoppinsRegular }
+  return { fontSize: fontSize['3xl'], color: '#E2DAFF', fontFamily: FontFamily.PoppinsRegular }
 }
 
 export interface HeightPickerProps {

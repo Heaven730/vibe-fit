@@ -10,9 +10,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useTheme } from '@/hooks/useTheme';
 
-const PURPLE = '#9D8FFF';
-const PROGRESS_TRACK = '#E0DCF8';
-
 export interface OnboardingLayoutProps {
   /** 当前步骤（1 起） */
   step: number;
@@ -132,13 +129,13 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 8,
     borderRadius: 4,
-    backgroundColor: PROGRESS_TRACK,
+    backgroundColor: '#E8DFFF',
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
     borderRadius: 4,
-    backgroundColor: PURPLE,
+    backgroundColor: '#8B6DF7',
   },
   titleSection: {
     paddingHorizontal: 20,
