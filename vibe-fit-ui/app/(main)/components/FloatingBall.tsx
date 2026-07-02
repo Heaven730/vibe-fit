@@ -1,4 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient'
+import { router } from 'expo-router'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import {
   Animated,
@@ -20,6 +21,7 @@ const BALL_SIZE = 68
 const EDGE_MARGIN = 16
 const TOP_MARGIN = 12
 const BOTTOM_NAV_GUARD = 124
+const TAP_THRESHOLD = 5
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
@@ -50,6 +52,10 @@ export function FloatingBall() {
   const animatedPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current
   const currentPosition = useRef<FloatingBallPosition>({ x: 0, y: 0 })
   const dragStartPosition = useRef<FloatingBallPosition>({ x: 0, y: 0 })
+
+  const openAssistant = useCallback(() => {
+    router.push('/assistant')
+  }, [])
 
   const bounds = useMemo(() => {
     const minX = EDGE_MARGIN
@@ -135,14 +141,23 @@ export function FloatingBall() {
           currentPosition.current = nextPosition
           animatedPosition.setValue(nextPosition)
         },
-        onPanResponderRelease: () => {
+        onPanResponderRelease: (_, gestureState) => {
+          const isTap =
+            Math.abs(gestureState.dx) <= TAP_THRESHOLD &&
+            Math.abs(gestureState.dy) <= TAP_THRESHOLD
+
+          if (isTap) {
+            openAssistant()
+            return
+          }
+
           snapToEdge(currentPosition.current)
         },
         onPanResponderTerminate: () => {
           snapToEdge(currentPosition.current)
         },
       }),
-    [animatedPosition, clampPosition, snapToEdge],
+    [animatedPosition, clampPosition, openAssistant, snapToEdge],
   )
 
   useEffect(() => {

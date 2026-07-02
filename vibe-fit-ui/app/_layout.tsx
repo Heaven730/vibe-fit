@@ -21,8 +21,15 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack
-      screenOptions={{ headerShown: false, animation: 'slide_from_right' }}
-    />
+    <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+      <Stack.Screen
+        name="(ai)"
+        options={{
+          presentation: 'transparentModal',
+          animation: 'slide_from_bottom',
+          contentStyle: { backgroundColor: 'transparent' },
+        }}
+      />
+    </Stack>
   )
 }
