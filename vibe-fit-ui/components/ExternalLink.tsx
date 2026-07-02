@@ -1,4 +1,4 @@
-import { Link } from 'expo-router';
+import { ExternalPathString, Link } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 
@@ -9,7 +9,7 @@ export function ExternalLink(
     <Link
       target="_blank"
       {...props}
-      href={props.href}
+      href={props.href as ExternalPathString}
       onPress={(e) => {
         e.preventDefault();
         WebBrowser.openBrowserAsync(props.href as string);

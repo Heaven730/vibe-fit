@@ -1,12 +1,14 @@
 {
   "expo": {
-    "name": "fronend",
-    "slug": "fronend",
+    "name": "Vibe Fit",
+    "slug": "vibe-fit",
     "version": "1.0.0",
+    "icon": "./assets/logo/logo.png",
     "orientation": "portrait",
-    "scheme": "fronend",
+    "scheme": "vibefit",
     "userInterfaceStyle": "automatic",
     "splash": {
+      "image": "./assets/logo/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -15,8 +17,10 @@
       "bundleIdentifier": "com.anonymous.fronend"
     },
     "android": {
+      "package": "com.vibefit.app",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE"
+        "foregroundImage": "./assets/logo/logo.png",
+        "backgroundColor": "#ffffff"
       },
       "predictiveBackGestureEnabled": false
     },

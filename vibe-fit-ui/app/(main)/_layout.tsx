@@ -10,6 +10,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { useOnboardingStore } from '@/store/onboardingStore'
 
 import { BottomNav, TabKey } from './components/BottomNav'
+import { FloatingBall } from './components/FloatingBall'
 import { Header } from './components/Header'
 
 const ROUTE_TO_TAB: Record<string, TabKey> = {
@@ -92,6 +93,8 @@ export default function MainLayout() {
           tabBar={(props) => <TabBar {...props} />}
         />
       </SafeAreaView>
+
+      <FloatingBall />
     </View>
   )
 }
